@@ -21,9 +21,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.graphics.ColorUtils
 import com.plcoding.cleanarchitecturenoteapp.core.util.TestTags
 import com.plcoding.cleanarchitecturenoteapp.feature_note.domain.model.Note
+import com.plcoding.cleanarchitecturenoteapp.ui.theme.CleanArchitectureNoteAppTheme
 
 @Composable
 fun NoteItem(
@@ -93,6 +95,76 @@ fun NoteItem(
                 contentDescription = "Delete note",
                 tint = MaterialTheme.colors.onSurface
             )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NoteItemPreview() {
+    CleanArchitectureNoteAppTheme {
+        NoteItem(
+            note = Note(
+                title = "Sample Note Title",
+                content = "This is a sample note content to demonstrate how the note item looks in the app. It can contain multiple lines of text.",
+                timestamp = System.currentTimeMillis(),
+                color = Note.noteColors[0].hashCode(),
+                id = 1
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            onDeleteClick = { }
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Long Content")
+@Composable
+fun NoteItemLongContentPreview() {
+    CleanArchitectureNoteAppTheme {
+        NoteItem(
+            note = Note(
+                title = "Very Long Title That Might Get Truncated",
+                content = "This is a much longer note content to test how the UI handles overflow. " +
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
+                        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+                timestamp = System.currentTimeMillis(),
+                color = Note.noteColors[1].hashCode(),
+                id = 2
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            onDeleteClick = { }
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "All Colors")
+@Composable
+fun NoteItemAllColorsPreview() {
+    CleanArchitectureNoteAppTheme {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Note.noteColors.forEachIndexed { index, color ->
+                NoteItem(
+                    note = Note(
+                        title = "Note ${index + 1}",
+                        content = "This note uses color variant ${index + 1}",
+                        timestamp = System.currentTimeMillis(),
+                        color = color.hashCode(),
+                        id = index
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    onDeleteClick = { }
+                )
+            }
         }
     }
 }
